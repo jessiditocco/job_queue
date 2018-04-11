@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from model import connect_to_db
+from model import db, connect_to_db, Job
 
 # We need to create our flask application
 # Flask needs to know what module to scan for things like routes
@@ -21,13 +21,14 @@ def create_job():
     # If the URL is in the table already, get the Job ID
     # Return the job ID to the user as JSON
 
-    requested_url = request.form.get("URL")
+    requested_url = request.form.get("url")
+    print "THIS IS THE REQUESTEDD URL!", requested_url
 
     url = Job.query.filter(Job.url == requested_url).first()
 
     if not url:
         url = Job(url=requested_url)
-        db.session.add(new_user)
+        db.session.add(url)
         db.session.commit()
 
     job_id = url.job_id
@@ -48,8 +49,12 @@ def get_html(job_id):
     # HTML is not ready yet
 
     job_id = request.args.get("job_id")
+    print "This is the job id!!!", job_id
 
-    html = Job.query.filter(Job.job_id == job_id).first().html
+    job = Job.query.filter(Job.job_id == job_id).first()
+
+    if job:
+        html = job.html
 
     if html:
         job_details = {"html": html}

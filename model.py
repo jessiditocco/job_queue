@@ -37,6 +37,7 @@ def connect_to_db(app, db_uri=DB_URI):
     """Connect the database to our Flask app"""
 
     app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
 
