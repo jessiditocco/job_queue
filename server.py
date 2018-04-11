@@ -22,7 +22,6 @@ def create_job():
     # Return the job ID to the user as JSON
 
     requested_url = request.form.get("url")
-    print "THIS IS THE REQUESTEDD URL!", requested_url
 
     url = Job.query.filter(Job.url == requested_url).first()
 
@@ -38,7 +37,7 @@ def create_job():
     return jsonify(job_details)
 
 
-@app.route('/<int:job_id>', methods=['GET'])
+@app.route('/<int:job_id>')
 def get_html(job_id):
     """Gets the HTML back from a job in the database"""
 
@@ -48,18 +47,17 @@ def get_html(job_id):
     # If there isn't html, send a message to the user saying
     # HTML is not ready yet
 
-    job_id = request.args.get("job_id")
     print "This is the job id!!!", job_id
 
     job = Job.query.filter(Job.job_id == job_id).first()
+    print "This is the Job!!!!!", job
 
-    if job:
-        html = job.html
+    html = job.html
 
     if html:
         job_details = {"html": html}
     else:
-        job_details = {"message": "HTML is not ready yet"}
+        job_details = {"message": "The HTML for this page is not ready yet"}
 
 
     return jsonify(job_details)
