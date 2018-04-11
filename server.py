@@ -1,5 +1,3 @@
-import requests
-
 import time
 import atexit
 
@@ -9,7 +7,10 @@ from apscheduler.triggers.interval import IntervalTrigger
 from flask import Flask, request, jsonify
 from model import db, connect_to_db, Job
 
+from add_html import update_html_in_database
+
 import logging
+
 
 # We need to create our flask application
 # Flask needs to know what module to scan for things like routes
@@ -18,33 +19,8 @@ import logging
 app = Flask(__name__)
 
 
-
 ####################### Will run if we start our server########################
 
-# Make a DB query to get jobs where HTML is Null
-# Loop through each of these jobs; we will get the URL field
-# now we will go this URL, get the response HTML
-# Then we update the Jobs HTML field with this information and save to DB
-
-def update_html_in_database():
-    """Updates the HTML in the database in the background"""
-
-    null_jobs = Job.query.filter(Job.html == None).all()
-
-    for job in null_jobs:
-        url = "http://" + job.url
-
-        r = requests.get(url)
-        html = r.text
-
-        job.html = html
-
-        print "Succesfully updated the html for {} in the database".format(job.job_id)
-
-        db.session.commit()
-
-
-    
 
 # This decorator will run functions that should be called at the begginging
 # Of the first request
@@ -64,7 +40,7 @@ def initialize_background_job():
 
     #####################################################################
     # Background scheduler runs the function update html in the database every 3 seconds
-    
+
     scheduler = BackgroundScheduler()
     scheduler.add_job(update_html_in_database, 'interval', seconds=3)
     scheduler.start()
@@ -108,10 +84,7 @@ def get_html(job_id):
     # If there isn't html, send a message to the user saying
     # HTML is not ready yet
 
-    print "This is the job id!!!", job_id
-
     job = Job.query.filter(Job.job_id == job_id).first()
-    print "This is the Job!!!!!", job
 
     html = job.html
 

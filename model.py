@@ -2,7 +2,6 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
-
 # This is the connection to the PostgreSQL database; were getting
 # this through the Flask-SQLAlchemy helper library. On this, we can
 # find the "session" object, where we do most of our interactions
@@ -30,6 +29,7 @@ class Job(db.Model):
         """Provides a helpful representation when a job is printed."""
 
         return "<Job ID = {} URL = {}".format(self.job_id, self.url)
+
 
 ######################### Helper functions ##################################### 
 
