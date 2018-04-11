@@ -23,7 +23,7 @@ class Job(db.Model):
 
     job_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     url = db.Column(db.String(1000), nullable=False)
-    html = db.Column(db.String(7000), nullable=True)
+    html = db.Column(db.String(), nullable=True)
 
 
     def __repr__(self):
